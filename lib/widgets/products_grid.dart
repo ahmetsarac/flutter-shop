@@ -3,11 +3,10 @@ import 'package:provider/provider.dart';
 import '../providers/products.dart';
 import './product_item.dart';
 
-
 class ProductsGrid extends StatelessWidget {
   const ProductsGrid({
-    Key? key,}) : super(key: key);
-
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +22,14 @@ class ProductsGrid extends StatelessWidget {
           mainAxisSpacing: 10,
         ),
         itemBuilder: (context, index) {
-          return ProductItem(
-              id: products[index].id,
-              title: products[index].title,
-              imageUrl: products[index].imageUrl,);
+          return ChangeNotifierProvider(
+            create: (context) => products[index],
+            child: ProductItem(
+              //id: products[index].id,
+              //title: products[index].title,
+              //imageUrl: products[index].imageUrl,
+            ),
+          );
         });
   }
 }
