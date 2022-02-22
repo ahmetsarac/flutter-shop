@@ -1,32 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shop/screens/products_overview_screen.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget{
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
+    final ThemeData theme = ThemeData(primarySwatch: Colors.purple, fontFamily: 'Lato',);
     return MaterialApp(
       title: 'Shop',
-      theme: ThemeData(primarySwatch: Colors.blue,),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget{
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Shop'),
-        ),
-        body: Center(
-            child: Text('Home page'),
-            ),
+      theme: theme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(
+        secondary: Colors.deepOrange,
+      )),
+      home: ProductsOverviewScreen(),
     );
   }
 }
