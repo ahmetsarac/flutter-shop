@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/screens/cart_screen.dart';
+import 'package:shop/widgets/app_drawer.dart';
 import 'package:shop/widgets/badge.dart';
 import '../providers/cart.dart';
 import '../widgets/products_grid.dart';
@@ -23,6 +24,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: const Text('Shop'),
         actions: [
