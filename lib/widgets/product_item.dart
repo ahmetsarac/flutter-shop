@@ -9,19 +9,21 @@ class ProductItem extends StatelessWidget {
   //final String title;
   //final String imageUrl;
 
-  const ProductItem(
-      {Key? key, /*required this.id, required this.title, required this.imageUrl*/})
-      : super(key: key);
+  const ProductItem({
+    Key? key,
+    /*required this.id, required this.title, required this.imageUrl*/
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: GridTile(
         child: GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(ProductDetailScreen.routeName, arguments: product.id);
+            Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
+                arguments: product.id);
           },
           child: Image.network(
             product.imageUrl,
@@ -30,12 +32,15 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(product.isFavourite ? Icons.favorite : Icons.favorite_border,
-                color: Theme.of(context).colorScheme.secondary),
-            onPressed: () {
-              product.toggleFavouriteStatus();
-            },
+          leading: Consumer<Product>(
+            builder: (ctx, product, child) => IconButton(
+                icon: Icon(
+                  product.isFavourite ? Icons.favorite : Icons.favorite_border,
+                ),
+                color: Theme.of(context).colorScheme.secondary,
+                onPressed: () {
+                  product.toggleFavouriteStatus();
+                }),
           ),
           title: Text(
             product.title,
