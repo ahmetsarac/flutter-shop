@@ -5,50 +5,41 @@ import 'package:shop/widgets/order_item.dart';
 
 import '../providers/orders.dart' show Orders;
 
-class OrdersScreen extends StatefulWidget {
+class OrdersScreen extends StatelessWidget {
   const OrdersScreen({Key? key}) : super(key: key);
 
   static const routeName = '/orders';
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
-}
-
-class _OrdersScreenState extends State<OrdersScreen> {
-  var _isLoading = false;
-
-  @override
-  void initState() {
-    Future.delayed(Duration.zero).then((value) async {
-      setState(() {
-        _isLoading = true;
-      });
-      await Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
-      setState(() {
-        _isLoading = false;
-      });
-    });
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final orders = Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Orders'),
       ),
-      body: _isLoading
-          ? const Center(
+      body: FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
               child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: orders.orders.length,
-              itemBuilder: (context, index) {
-                return OrderItem(order: orders.orders[index]);
-              },
-            ),
+            );
+          } else {
+            if (snapshot.error != null) {
+              return const Center(
+                child: Text('An error occured!'),
+              );
+            } else {
+              return Consumer<Orders>(
+                  builder: (ctx, orders, child) => ListView.builder(
+                        itemCount: orders.orders.length,
+                        itemBuilder: (context, index) {
+                          return OrderItem(order: orders.orders[index]);
+                        },
+                      ));
+            }
+          }
+        },
+        future: Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
+      ),
       drawer: const AppDrawer(),
     );
   }
