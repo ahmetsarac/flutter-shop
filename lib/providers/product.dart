@@ -31,8 +31,7 @@ class Product with ChangeNotifier {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
-    final url = Uri.parse(
-        Constants.url.substring(0, Constants.url.length - 5) + '/$id.json');
+    final url = Uri.parse(Constants.url + '/products/$id.json');
     try {
       final response = await http.patch(
         url,

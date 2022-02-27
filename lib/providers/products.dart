@@ -55,9 +55,16 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
+    Map<String, dynamic> emptyMap = {};
     try {
-      final response = await http.get(Uri.parse(Constants.url));
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final response =
+          await http.get(Uri.parse(Constants.url + '/products.json'));
+      final extractedData = json.decode(response.body) == null
+          ? emptyMap
+          : json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData.isEmpty) {
+        return;
+      }
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -135,7 +142,7 @@ class Products with ChangeNotifier {
     notifyListeners();
     final response = await http.delete(url);
     if (response.statusCode >= 400) {
-      _items.insert(existingProductIndex, existingProduct!);
+      _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
       throw HttpException('Could not delete product.');
     }
