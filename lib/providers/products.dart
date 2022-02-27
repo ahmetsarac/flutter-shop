@@ -77,7 +77,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    final url = Uri.parse(Constants.url);
+    final url = Uri.parse(Constants.url + '/products.json');
     try {
       final response = await http.post(
         url,
@@ -109,8 +109,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = Uri.parse(
-          Constants.url.substring(0, Constants.url.length - 5) + '/$id.json');
+      final url = Uri.parse(Constants.url + '/products/$id.json');
       await http.patch(
         url,
         body: json.encode({
@@ -129,8 +128,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.parse(
-        Constants.url.substring(0, Constants.url.length - 5) + '/$id.json');
+    final url = Uri.parse(Constants.url + '/products/$id.json');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
