@@ -59,11 +59,13 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     Map<String, dynamic> emptyMap = {};
     try {
-      final response = await http
-          .get(Uri.parse(Constants.url + '/products.json?auth=$authToken'));
+      final response = await http.get(Uri.parse(
+          Constants.url + '/products.json?auth=$authToken&$filterString'));
       final extractedData = json.decode(response.body) == null
           ? emptyMap
           : json.decode(response.body) as Map<String, dynamic>;
@@ -84,10 +86,11 @@ class Products with ChangeNotifier {
               favouriteData == null ? false : favouriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
         ));
-        _items = loadedProducts;
-        notifyListeners();
       });
+      _items = loadedProducts;
+      notifyListeners();
     } catch (error) {
+      print(error.toString());
       rethrow;
     }
   }
@@ -103,6 +106,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
+            'creatorId': userId,
           },
         ),
       );
