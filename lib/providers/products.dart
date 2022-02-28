@@ -42,6 +42,10 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+  final String authToken;
+
+  Products(this.authToken, this._items);
+
   List<Product> get items {
     return [..._items];
   }
@@ -57,8 +61,8 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     Map<String, dynamic> emptyMap = {};
     try {
-      final response =
-          await http.get(Uri.parse(Constants.url + '/products.json'));
+      final response = await http
+          .get(Uri.parse(Constants.url + '/products.json?auth=$authToken'));
       final extractedData = json.decode(response.body) == null
           ? emptyMap
           : json.decode(response.body) as Map<String, dynamic>;
@@ -84,7 +88,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    final url = Uri.parse(Constants.url + '/products.json');
+    final url = Uri.parse(Constants.url + '/products.json?auth=$authToken');
     try {
       final response = await http.post(
         url,
@@ -115,7 +119,8 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = Uri.parse(Constants.url + '/products/$id.json');
+      final url =
+          Uri.parse(Constants.url + '/products/$id.json?auth=$authToken');
       await http.patch(
         url,
         body: json.encode({
@@ -134,7 +139,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.parse(Constants.url + '/products/$id.json');
+    final url = Uri.parse(Constants.url + '/products/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
