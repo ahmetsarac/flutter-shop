@@ -8,6 +8,7 @@ import 'package:shop/screens/product_detail_screen.dart';
 import 'package:shop/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/screens/user_products_screen.dart';
+import 'providers/auth.dart';
 import 'providers/cart.dart';
 import 'providers/products.dart';
 
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
     );
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
         ChangeNotifierProvider(
           create: (ctx) => Products(),
         ),
